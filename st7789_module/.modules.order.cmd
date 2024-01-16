@@ -1,1 +1,0 @@
-cmd_/home/pi/LCD-show-master/st7789_module/modules.order := {   echo /home/pi/LCD-show-master/st7789_module/fb_st7789v.ko; :; } | awk '!x[$$0]++' - > /home/pi/LCD-show-master/st7789_module/modules.order
