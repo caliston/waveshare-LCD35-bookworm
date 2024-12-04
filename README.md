@@ -24,6 +24,7 @@ sockets.  You may need a riser header if the Pi's own header isn't tall enough t
    This file tells Linux about the display hardware we've connected.
 
 3. We need to tell the Pi the existance of the .dtbo file.  Edit /boot/config.txt and add to the bottom:
+(November 2024: This file is now located at /boot/firmware/config.txt in the latest bullseye images)
 
    ```
    dtoverlay=waveshare35a
@@ -94,7 +95,7 @@ sockets.  You may need a riser header if the Pi's own header isn't tall enough t
 
    If you see multicoloured 'snow' on a part of the display you know it's working.
 
-5. Unfortunately the permissions on this node aren't right so we need a udev rule to fix it.  Put this in /etc/udev/rules.d/99-tty.rules :
+5. With older images the permissions on this node aren't right so we need a udev rule to fix it.  Put this in /etc/udev/rules.d/99-tty.rules if the permissions on the /dev/fb* devices above are `crw--w----` :
 
    ```
    KERNEL=="tty[0-9]*", GROUP="tty", MODE="0660"
@@ -139,4 +140,10 @@ CalibrationMatrix line as follows:
    - 180 degrees: `Option "CalibrationMatrix" "-1 0 1 0 -1 1 0 0 1"`
    - 270 degrees: `Option "CalibrationMatrix" "0 -1 1 1 0 0 0 0 1"`
 
-
+9. To get a text console on the display you can add the following to /boot/firmware/cmdline.txt (/boot/cmdline.txt with older images): ` fbcon=map:10`.
+This will map the tty1 console to the display; there are other options you can supply to set rotation and font. Swapping to a 16x8 font from the default aids readability.
+A full cmdline.txt is:
+   ```
+   console=serial0,115200 console=tty1 root=PARTUUID=52157a78-02 rootfstype=ext4 fsck.repair=yes rootwait cfg80211.ieee80211_regdom=NL fbcon=map:10 fbcon=rotate:0 fbcon=font:VGA8x16
+   ```
+for more see: https://www.kernel.org/doc/html/latest/fb/fbcon.html
