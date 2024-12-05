@@ -141,9 +141,11 @@ CalibrationMatrix line as follows:
    - 270 degrees: `Option "CalibrationMatrix" "0 -1 1 1 0 0 0 0 1"`
 
 9. To get a text console on the display you can add the following to /boot/firmware/cmdline.txt (/boot/cmdline.txt with older images): ` fbcon=map:10`.
+
 This will map the tty1 console to the display; there are other options you can supply to set rotation and font. Swapping to a 16x8 font from the default aids readability.
-A full cmdline.txt is:
+
+A full cmdline.txt might be:
    ```
-   console=serial0,115200 console=tty1 root=PARTUUID=52157a78-02 rootfstype=ext4 fsck.repair=yes rootwait cfg80211.ieee80211_regdom=NL fbcon=map:10 fbcon=rotate:0 fbcon=font:VGA8x16
+   console=serial0,115200 console=tty1 root=PARTUUID=<DO NOT CHANGE THIS> rootfstype=ext4 fsck.repair=yes rootwait cfg80211.ieee80211_regdom=<DO NOT CHANGE> fbcon=map:10 fbcon=rotate:0 fbcon=font:VGA8x16
    ```
-for more see: https://www.kernel.org/doc/html/latest/fb/fbcon.html
+Rotations `0` and `2` are landscape modes, `1` and `3` are portrait. For more see: https://www.kernel.org/doc/html/latest/fb/fbcon.html
