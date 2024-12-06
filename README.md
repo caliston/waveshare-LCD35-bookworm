@@ -23,9 +23,9 @@ sockets.  You may need a riser header if the Pi's own header isn't tall enough t
 
    This file tells Linux about the display hardware we've connected.
 
-3. We need to tell the Pi the existance of the .dtbo file.  Edit /boot/config.txt and add to the bottom:
-(November 2024: This file is now located at /boot/firmware/config.txt in the latest bullseye images)
+3. We need to tell the Pi the existance of the .dtbo file.  Edit /boot/firmware/config.txt  and add to the bottom:
 
+   Note that this location has changed in recent Pi bullseye images; it used to be at /boot/config.txt on older Pi installed images.
    ```
    dtoverlay=waveshare35a
    hdmi_force_hotplug=1
@@ -140,12 +140,16 @@ CalibrationMatrix line as follows:
    - 180 degrees: `Option "CalibrationMatrix" "-1 0 1 0 -1 1 0 0 1"`
    - 270 degrees: `Option "CalibrationMatrix" "0 -1 1 1 0 0 0 0 1"`
 
-9. To get a text console on the display you can add the following to /boot/firmware/cmdline.txt (/boot/cmdline.txt with older images): ` fbcon=map:10`.
 
-This will map the tty1 console to the display; there are other options you can supply to set rotation and font. Swapping to a 16x8 font from the default aids readability.
+9. If you are not running X11 and want to get a usable text console on the display you can add the following to /boot/firmware/cmdline.txt (/boot/cmdline.txt with older images): ` fbcon=map:10`
 
-A full cmdline.txt might be:
+   This will map the tty1 console to the display; there are other options you can add to set rotation and font.
+
+   A full cmdline.txt might be (for a system with WiFi enabled):
    ```
-   console=serial0,115200 console=tty1 root=PARTUUID=<DO NOT CHANGE THIS> rootfstype=ext4 fsck.repair=yes rootwait cfg80211.ieee80211_regdom=<DO NOT CHANGE> fbcon=map:10 fbcon=rotate:0 fbcon=font:VGA8x16
+   console=<DO NOT CHANGE ANY OF THE EXISTING LINE> fbcon=map:10 fbcon=rotate:0 fbcon=font:VGA8x16
    ```
-Rotations `0` and `2` are landscape modes, `1` and `3` are portrait. For more see: https://www.kernel.org/doc/html/latest/fb/fbcon.html
+   Note: you only need to add options to the end of the line, do not edit any of the rest unless you *genuinely* understand what you are doing.
+
+   Swapping to a 16x8 font from the very dense default aids readability. Rotations `0` and `2` are landscape modes, `1` and `3` are portrait. For more see: https://www.kernel.org/doc/html/latest/fb/fbcon.html
+
