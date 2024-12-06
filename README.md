@@ -23,8 +23,9 @@ sockets.  You may need a riser header if the Pi's own header isn't tall enough t
 
    This file tells Linux about the display hardware we've connected.
 
-3. We need to tell the Pi the existance of the .dtbo file.  Edit /boot/config.txt and add to the bottom:
+3. We need to tell the Pi the existance of the .dtbo file.  Edit /boot/firmware/config.txt  and add to the bottom:
 
+   Note that this location has changed in recent Pi bullseye images; it used to be at /boot/config.txt on older Pi installed images.
    ```
    dtoverlay=waveshare35a
    hdmi_force_hotplug=1
@@ -94,7 +95,7 @@ sockets.  You may need a riser header if the Pi's own header isn't tall enough t
 
    If you see multicoloured 'snow' on a part of the display you know it's working.
 
-5. Unfortunately the permissions on this node aren't right so we need a udev rule to fix it.  Put this in /etc/udev/rules.d/99-tty.rules :
+5. With older images the permissions on this node aren't right so we need a udev rule to fix it.  Put this in /etc/udev/rules.d/99-tty.rules if the permissions on the /dev/fb* devices above are `crw--w----` :
 
    ```
    KERNEL=="tty[0-9]*", GROUP="tty", MODE="0660"
@@ -139,4 +140,16 @@ CalibrationMatrix line as follows:
    - 180 degrees: `Option "CalibrationMatrix" "-1 0 1 0 -1 1 0 0 1"`
    - 270 degrees: `Option "CalibrationMatrix" "0 -1 1 1 0 0 0 0 1"`
 
+
+9. If you are not running X11 and want to get a usable text console on the display you can add the following to /boot/firmware/cmdline.txt (/boot/cmdline.txt with older images): ` fbcon=map:10`
+
+   This will map the tty1 console to the display; there are other options you can add to set rotation and font.
+
+   A full cmdline.txt might be (for a system with WiFi enabled):
+   ```
+   console=<DO NOT CHANGE ANY OF THE EXISTING LINE> fbcon=map:10 fbcon=rotate:0 fbcon=font:VGA8x16
+   ```
+   Note: you only need to add options to the end of the line, do not edit any of the rest unless you *genuinely* understand what you are doing.
+
+   Swapping to a 16x8 font from the very dense default aids readability. Rotations `0` and `2` are landscape modes, `1` and `3` are portrait. For more see: https://www.kernel.org/doc/html/latest/fb/fbcon.html
 
